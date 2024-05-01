@@ -24,15 +24,15 @@ mongoose.connect(MONGOURL).then(() => {
 const JobbSchema = new mongoose.Schema({
     companyname: {
         type: String,
-        required: true
+        required: [true, "Du måste skicka med företagsnamn."]
     },
     jobtitle: {
         type: String,
-        required: true
+        required: [true, "Du måste skicka med jobbtitel."]
     },
     location: {
         type: String,
-        required: true
+        required: [true, "Du måste skicka med platsen för arbetet."]
     },
     description: {
         type: String,
@@ -51,6 +51,7 @@ app.listen(PORT, () => {
     console.log(`Servern är startad på port ${PORT}.`);
 });
 
+//Hämtar alla jobb från databasen/API
 app.get("/jobs", async(req, res) => {
     try {
         let result = await Job.find({});
@@ -60,3 +61,15 @@ app.get("/jobs", async(req, res) => {
         return res.status(500).json(error);
     }
 })
+
+//Postar nytt jobb till databasen/API
+app.post("/jobs", async(req, res) => {
+    try {
+        let result = await Job.create(req.body);
+
+        return res.json(result);
+    } catch {
+        return res.status(400).json(error);
+    }
+})
+
