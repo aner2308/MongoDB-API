@@ -51,7 +51,7 @@ app.listen(PORT, () => {
     console.log(`Servern är startad på port ${PORT}.`);
 });
 
-//Hämtar alla jobb från databasen/API
+//GET för att hämta alla jobb från databasen/API
 app.get("/jobs", async(req, res) => {
     try {
         let result = await Job.find({});
@@ -62,7 +62,7 @@ app.get("/jobs", async(req, res) => {
     }
 })
 
-//Postar nytt jobb till databasen/API
+//POST för att lägga till nytt jobb till databasen/API
 app.post("/jobs", async(req, res) => {
     try {
         let result = await Job.create(req.body);
@@ -73,3 +73,20 @@ app.post("/jobs", async(req, res) => {
     }
 })
 
+// PUT för att uppdatera en befintlig jobbpost
+app.put("/jobs/:id", async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const updatedJob = req.body;
+
+        const result = await Job.findByIdAndUpdate(jobId, updatedJob, { new: true });
+
+        if (!result) {
+            return res.status(404).json({ message: "Jobbposten hittades inte." });
+        }
+
+        return res.json(result);
+    } catch (error) {
+        return res.status(400).json({ message: "Det uppstod ett fel vid uppdatering av jobbposten.", error: error });
+    }
+});
