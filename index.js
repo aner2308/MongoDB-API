@@ -81,12 +81,25 @@ app.put("/jobs/:id", async (req, res) => {
 
         const result = await Job.findByIdAndUpdate(jobId, updatedJob, { new: true });
 
+        return res.json(result);
+    } catch (error) {
+        return res.status(400).json({ message: "Det uppstod ett fel vid uppdatering av jobbposten.", error: error });
+    }
+});
+
+// DELETE för att ta bort en befintlig jobbpost
+app.delete("/jobs/:id", async (req, res) => {
+    try {
+        const jobId = req.params.id;
+
+        const result = await Job.findByIdAndDelete(jobId);
+
         if (!result) {
             return res.status(404).json({ message: "Jobbposten hittades inte." });
         }
 
-        return res.json(result);
+        return res.json({ message: "Jobbposten har tagits bort." });
     } catch (error) {
-        return res.status(400).json({ message: "Det uppstod ett fel vid uppdatering av jobbposten.", error: error });
+        return res.status(400).json({ message: "Det uppstod ett fel vid borttagning av jobbposten.", error: error });
     }
 });
