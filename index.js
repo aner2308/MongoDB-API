@@ -58,7 +58,7 @@ app.get("/jobs", async(req, res) => {
 
         return res.json(result);
     } catch {
-        return res.status(500).json(error);
+        return res.status(500).json({ message: "Det uppstod ett fel vid inhämtning av jobbposter.", error: error });
     }
 })
 
@@ -69,7 +69,7 @@ app.post("/jobs", async(req, res) => {
 
         return res.json(result);
     } catch {
-        return res.status(400).json(error);
+        return res.status(400).json({ message: "Det uppstod ett fel vid tilläggning av jobbposten.", error: error });
     }
 })
 
